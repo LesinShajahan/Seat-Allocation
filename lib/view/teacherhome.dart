@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class StudentHome extends StatelessWidget {
-  const StudentHome({Key? key}) : super(key: key);
+class TeacherHome extends StatelessWidget {
+  const TeacherHome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,30 +31,32 @@ class StudentHome extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 50),
-          Container(
-            width: 380,
-            height: 36,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 19, 57,
-                  85), // You can change the color as per your preference
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                // Add your logic for "ADD STUDENTS" button here
+              },
+              child: Text("ADD STUDENTS"),
             ),
-            child: Center(
-              child: Text(
-                'My Exam Hall',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Add your logic for "STUDENT DETAILS" button here
+              },
+              child: Text("STUDENT DETAILS"),
             ),
-          ),
-          const SizedBox(height: 30), // Adjust the spacing as needed
-          const Placeholder(),
-        ],
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Add your logic for "ATTENDANCE" button here
+              },
+              child: Text("ATTENDANCE"),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -64,7 +66,6 @@ class StudentHome extends StatelessWidget {
         backgroundColor: Color.fromARGB(
             255, 19, 57, 85), // You can change the color as per your preference
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
