@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:seat_allocation/view/Adminhome.dart';
+import 'package:seat_allocation/view/addstudentdetails.dart';
 import 'package:seat_allocation/view/studenthome.dart';
 import 'package:seat_allocation/view/teacherhome.dart';
 import 'package:seat_allocation/welcomePage.dart';
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: TeacherHome(),
+      home: AddstudentHome(),
     );
   }
 }
