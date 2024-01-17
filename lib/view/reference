@@ -1,0 +1,17 @@
+focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(width: 3, color: Colors.red),
+                  borderRadius: BorderRadius.circular(15),
+                )
+
+
+
+Future SignIn() async {
+    await FirebaseAuth.instance.SignInWithEmailAndPassword(
+      email: _usernameController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+  }
+
+
+Exception has occurred.
+PlatformException (PlatformException(null-error, Host platform returned null value for non-null return value., null, null))

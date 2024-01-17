@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "37898313383",
+    "project_id": "seat-allocation-3dffa",
+    "storage_bucket": "seat-allocation-3dffa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37898313383:android:04ad75b0de74033b9e4582",
+        "android_client_info": {
+          "package_name": "com.example.seat_allocation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbptAe4sQbr2fCnrGcqpE8Na4-ufDHPS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

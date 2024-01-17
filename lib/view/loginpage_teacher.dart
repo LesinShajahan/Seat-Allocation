@@ -69,9 +69,12 @@ class _loginpage_teacherState extends State<loginpage_teacher> {
                     controller: _usernameController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      labelText: 'E-mail',
-                      border: InputBorder.none,
-                    ),
+                        labelText: 'E-mail',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 3, color: Colors.red),
+                          borderRadius: BorderRadius.circular(15),
+                        )),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
@@ -85,9 +88,12 @@ class _loginpage_teacherState extends State<loginpage_teacher> {
                     controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: InputBorder.none,
-                    ),
+                        labelText: 'Password',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 3, color: Colors.red),
+                          borderRadius: BorderRadius.circular(15),
+                        )),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -97,9 +103,12 @@ class _loginpage_teacherState extends State<loginpage_teacher> {
                     },
                   ),
                   SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: _performLogin,
-                    child: Text('Login'),
+                  GestureDetector(
+                    onTap: _performLogin,
+                    child: ElevatedButton(
+                      onPressed: _performLogin,
+                      child: Text('Login'),
+                    ),
                   ),
                   SizedBox(height: 16),
                 ],

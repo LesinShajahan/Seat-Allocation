@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:seat_allocation/view/addstudentdetails.dart';
+import 'package:seat_allocation/view/addteacherdetails.dart';
 
 class AdminHome extends StatelessWidget {
   const AdminHome({Key? key}) : super(key: key);
@@ -37,24 +39,38 @@ class AdminHome extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 19, 57, 85),
-                fixedSize: Size(250, 0),
+                fixedSize: Size(300, 0),
               ),
               onPressed: () {
-                // Add your "ADD TEACHERS" button onPressed logic here
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddTeacherHome(),
+                    ));
               },
-              child: Text("ADD TEACHERS"),
+              child: Text(
+                "ADD TEACHERS",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             Container(
-              width: 250,
+              width: 300,
               child: ElevatedButton(
                 onPressed: () {
-                  // Add your "ADD STUDENTS" button onPressed logic here
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddstudentHome(),
+                      ));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Color.fromARGB(255, 19, 57, 85),
-                  fixedSize: Size(250, 0),
+                  fixedSize: Size(300, 0),
                 ),
-                child: Text("ADD STUDENT"),
+                child: Text(
+                  "ADD STUDENT",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
             ElevatedButton(
@@ -63,12 +79,15 @@ class AdminHome extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 19, 57, 85),
-                fixedSize: Size(250, 0),
+                fixedSize: Size(300, 0),
               ),
               // style: ElevatedButton.styleFrom(
               //   primary: Color.fromARGB(255, 19, 57, 85),
               // ),
-              child: Text("ADD DEPARTMENT"),
+              child: Text(
+                "ADD DEPARTMENT",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -76,9 +95,12 @@ class AdminHome extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 19, 57, 85),
-                fixedSize: Size(250, 0),
+                fixedSize: Size(300, 0),
               ),
-              child: Text("SEAT ALLOCATION"),
+              child: Text(
+                "SEAT ALLOCATION",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -86,9 +108,12 @@ class AdminHome extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 19, 57, 85),
-                fixedSize: Size(250, 0),
+                fixedSize: Size(300, 0),
               ),
-              child: Text("ADD EXAM HALLS"),
+              child: Text(
+                "ADD EXAM HALLS",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -96,9 +121,17 @@ class AdminHome extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 19, 57, 85),
-                fixedSize: Size(250, 0),
+                fixedSize: Size(300, 0),
               ),
-              child: Text("VIEW SEATING ARRANGEMENTS"),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "VIEW SEATING ARRANGEMENTS",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -106,9 +139,12 @@ class AdminHome extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 19, 57, 85),
-                fixedSize: Size(250, 0),
+                fixedSize: Size(300, 0),
               ),
-              child: Text("STUDENTS DETAILS"),
+              child: Text(
+                "STUDENTS DETAILS",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -116,9 +152,12 @@ class AdminHome extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 19, 57, 85),
-                fixedSize: Size(250, 0),
+                fixedSize: Size(300, 0),
               ),
-              child: Text("TEACHER DETAILS"),
+              child: Text(
+                "TEACHER DETAILS",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -126,9 +165,12 @@ class AdminHome extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 19, 57, 85),
-                fixedSize: Size(250, 0),
+                fixedSize: Size(300, 0),
               ),
-              child: Text("VIEW DEPARTMENTS"),
+              child: Text(
+                "VIEW DEPARTMENTS",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -136,9 +178,12 @@ class AdminHome extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 19, 57, 85),
-                fixedSize: Size(250, 0),
+                fixedSize: Size(300, 0),
               ),
-              child: Text("VIEW EXAMHALLS"),
+              child: Text(
+                "VIEW EXAMHALLS",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -146,9 +191,12 @@ class AdminHome extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 primary: Color.fromARGB(255, 19, 57, 85),
-                fixedSize: Size(250, 0),
+                fixedSize: Size(300, 0),
               ),
-              child: Text("EDIT DETAILS"),
+              child: Text(
+                "EDIT DETAILS",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/Adminhome.dart';
 
-class AddstudentHome extends StatelessWidget {
-  const AddstudentHome({Key? key}) : super(key: key);
+class AddTeacherHome extends StatelessWidget {
+  const AddTeacherHome({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class AddstudentHome extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20)),
                 child: Center(
                   child: Text(
-                    "ADD STUDENT DETAILS",
+                    "ADD TEACHER DETAILS",
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 25,
@@ -63,7 +63,7 @@ class AddstudentHome extends StatelessWidget {
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    labelText: 'Registration Number',
+                    labelText: 'ID Number',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20))),
               ),
@@ -74,7 +74,7 @@ class AddstudentHome extends StatelessWidget {
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    labelText: 'Student Name',
+                    labelText: 'Teacher Name',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20))),
               ),
@@ -86,17 +86,6 @@ class AddstudentHome extends StatelessWidget {
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     labelText: 'Department',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    labelText: 'Year',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20))),
               ),

@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AdminLogin extends StatefulWidget {
@@ -17,14 +19,10 @@ class _AdminLoginState extends State<AdminLogin> {
     super.dispose();
   }
 
-  void _performLogin() {
-    if (_formKey.currentState?.validate() ?? false) {
-      // Perform login logic here
-      String username = _usernameController.text;
-      String password = _passwordController.text;
-      print('Username: $username, Password: $password');
-      // Add your login validation logic here
-    }
+  Future SignIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _usernameController.text.trim(),
+        password: _passwordController.text.trim());
   }
 
   @override
@@ -69,9 +67,12 @@ class _AdminLoginState extends State<AdminLogin> {
                     controller: _usernameController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      labelText: 'E-mail',
-                      border: InputBorder.none,
-                    ),
+                        labelText: 'E-mail',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 3, color: Colors.red),
+                          borderRadius: BorderRadius.circular(15),
+                        )),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
@@ -85,9 +86,12 @@ class _AdminLoginState extends State<AdminLogin> {
                     controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: InputBorder.none,
-                    ),
+                        labelText: 'Password',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 3, color: Colors.red),
+                          borderRadius: BorderRadius.circular(15),
+                        )),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -97,9 +101,28 @@ class _AdminLoginState extends State<AdminLogin> {
                     },
                   ),
                   SizedBox(height: 32),
-                  ElevatedButton(
-                    onPressed: _performLogin,
-                    child: Text('Login'),
+                  Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: GestureDetector(
+                      onTap: SignIn,
+                      child: Container(
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 19, 57, 85),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Sign In',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                   SizedBox(height: 16),
                 ],
