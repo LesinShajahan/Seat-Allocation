@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/addstudentdetails.dart';
 import 'package:seat_allocation/view/addteacherdetails.dart';
+import 'package:seat_allocation/view/loginpage_admin.dart';
 
 class AdminHome extends StatelessWidget {
   const AdminHome({Key? key}) : super(key: key);
@@ -203,11 +205,11 @@ class AdminHome extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your logout button onPressed logic here
+          FirebaseAuth.instance.signOut();
         },
         child: Icon(Icons.logout),
-        backgroundColor: Color.fromARGB(
-            255, 19, 57, 85), // You can change the color as per your preference
+        backgroundColor: Color.fromARGB(255, 19, 57, 85),
+        // You can change the color as per your preference
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
