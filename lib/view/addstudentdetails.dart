@@ -1,8 +1,77 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/Adminhome.dart';
 
-class AddstudentHome extends StatelessWidget {
-  const AddstudentHome({Key? key}) : super(key: key);
+class AddstudentHome extends StatefulWidget {
+  const AddstudentHome({super.key});
+
+  @override
+  State<AddstudentHome> createState() => _AddstudentHomeState();
+}
+
+class _AddstudentHomeState extends State<AddstudentHome> {
+  //text controllers
+  final user = FirebaseAuth.instance.currentUser;
+
+  final TextEditingController registrationnumberController =
+      TextEditingController();
+  final TextEditingController studentnameController = TextEditingController();
+  final TextEditingController departmentController = TextEditingController();
+  final TextEditingController yearController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController dateofbirthController = TextEditingController();
+
+  @override
+  void dispose() {
+    registrationnumberController.dispose();
+    studentnameController.dispose();
+    departmentController.dispose();
+    yearController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    dateofbirthController.dispose();
+
+    super.dispose();
+  }
+
+  Future signUp() async {
+    //create user
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim());
+
+    //add user details
+    addStudentdetails(
+        registrationnumberController.text.trim(),
+        studentnameController.text.trim(),
+        departmentController.text.trim(),
+        int.parse(yearController.text.trim()),
+        emailController.text.trim(),
+        passwordController.text.trim(),
+        dateofbirthController.text.trim());
+  }
+
+  Future addStudentdetails(
+      String registrationnumber,
+      String studentname,
+      String department,
+      int year,
+      String email,
+      String password,
+      String dateofbirth) async {
+    await FirebaseFirestore.instance.collection('studentsdetails').add({
+      'registration number': registrationnumber,
+      'student name': studentname,
+      'department': department,
+      'year': year,
+      'email': email,
+      'password': password,
+      'date of birth': dateofbirth,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +208,7 @@ class AddstudentHome extends StatelessWidget {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Add logic to handle form submission
+                  signUp(); // Call the signUp method to store data in Firebase
                   // You can access the entered values using the controllers of each TextFormField
                 },
                 style: ButtonStyle(

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/firebase_options.dart';
+import 'package:seat_allocation/view/addstudentdetails.dart';
 import 'package:seat_allocation/view/loginpage_admin.dart';
 import 'package:seat_allocation/view/main_page.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      home: AddstudentHome(),
     );
   }
 }

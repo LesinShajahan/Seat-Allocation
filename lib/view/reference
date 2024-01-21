@@ -15,3 +15,17 @@ Future SignIn() async {
 
 Exception has occurred.
 PlatformException (PlatformException(null-error, Host platform returned null value for non-null return value., null, null))
+
+
+
+class _AdminLoginState extends State<AdminLogin> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
