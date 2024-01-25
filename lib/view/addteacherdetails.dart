@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/Adminhome.dart';
 
-class AddTeacherHome extends StatelessWidget {
+class AddTeacherHome extends StatefulWidget {
   const AddTeacherHome({super.key});
 
+  @override
+  State<AddTeacherHome> createState() => _AddTeacherHomeState();
+}
+
+class _AddTeacherHomeState extends State<AddTeacherHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
