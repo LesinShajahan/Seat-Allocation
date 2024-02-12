@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/adddepartment.dart';
+import 'package:seat_allocation/view/addexamhalls.dart';
 import 'package:seat_allocation/view/addstudentdetails.dart';
 import 'package:seat_allocation/view/addteacherdetails.dart';
 import 'package:seat_allocation/view/loginpage_admin.dart';
@@ -131,6 +132,13 @@ class AdminHome extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddExamhall(),
+                            ));
+                      };
                       // Add your "VIEW SEATING ARRANGEMENTS" button onPressed logic here
                     },
                     style: ElevatedButton.styleFrom(

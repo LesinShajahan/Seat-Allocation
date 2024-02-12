@@ -1,10 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/firebase_options.dart';
+import 'package:seat_allocation/view/Adminhome.dart';
+import 'package:seat_allocation/view/adddepartment.dart';
+import 'package:seat_allocation/view/addexamhalls.dart';
 import 'package:seat_allocation/view/addstudentdetails.dart';
+import 'package:seat_allocation/view/addteacherdetails.dart';
 import 'package:seat_allocation/view/loginpage_admin.dart';
 import 'package:seat_allocation/view/main_page.dart';
 import 'package:seat_allocation/view/studenthome.dart';
+import 'package:seat_allocation/view/teacherhome.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StudentHome(),
+      home: AddExamhall(),
     );
   }
 }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/Adminhome.dart';
 
 class AddstudentHome extends StatefulWidget {
-  const AddstudentHome({super.key});
+  const AddstudentHome({Key? key}) : super(key: key);
 
   @override
   State<AddstudentHome> createState() => _AddstudentHomeState();
@@ -13,8 +13,6 @@ class AddstudentHome extends StatefulWidget {
 
 class _AddstudentHomeState extends State<AddstudentHome> {
   //text controllers
-  final user = FirebaseAuth.instance.currentUser;
-
   final TextEditingController registrationnumberController =
       TextEditingController();
   final TextEditingController studentnameController = TextEditingController();
@@ -37,7 +35,7 @@ class _AddstudentHomeState extends State<AddstudentHome> {
     super.dispose();
   }
 
-  Future signUp() async {
+  Future<void> signUp() async {
     //create user
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
@@ -54,7 +52,7 @@ class _AddstudentHomeState extends State<AddstudentHome> {
         dateofbirthController.text.trim());
   }
 
-  Future addStudentdetails(
+  Future<void> addStudentdetails(
       String registrationnumber,
       String studentname,
       String department,
@@ -62,15 +60,39 @@ class _AddstudentHomeState extends State<AddstudentHome> {
       String email,
       String password,
       String dateofbirth) async {
-    await FirebaseFirestore.instance.collection('studentsdetails').add({
-      'registration number': registrationnumber,
-      'student name': studentname,
-      'department': department,
-      'year': year,
-      'email': email,
-      'password': password,
-      'date of birth': dateofbirth,
-    });
+    // Query Firestore to check if a student with the same registration number already exists
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('studentsdetails')
+        .where('registration number', isEqualTo: registrationnumber)
+        .get();
+
+    // If there are no documents matching the query, add the student details
+    if (querySnapshot.docs.isEmpty) {
+      await FirebaseFirestore.instance.collection('studentsdetails').add({
+        'registration number': registrationnumber,
+        'student name': studentname,
+        'department': department,
+        'year': year,
+        'email': email,
+        'password': password,
+        'date of birth': dateofbirth,
+      });
+
+      // Optionally, you can show a snackbar or navigate to another screen upon successful submission
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Student details submitted successfully!'),
+        ),
+      );
+    } else {
+      // If a student with the same registration number already exists, display a message indicating that
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text('Student with this registration number already exists!'),
+        ),
+      );
+    }
   }
 
   @override
@@ -83,10 +105,11 @@ class _AddstudentHomeState extends State<AddstudentHome> {
           icon: Icon(Icons.arrow_back_ios_new_outlined),
           onPressed: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AdminHome(),
-                ));
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminHome(),
+              ),
+            );
           },
         ),
         actions: [
@@ -129,6 +152,7 @@ class _AddstudentHomeState extends State<AddstudentHome> {
               ),
               SizedBox(height: 20),
               TextFormField(
+                controller: registrationnumberController,
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -140,6 +164,7 @@ class _AddstudentHomeState extends State<AddstudentHome> {
                 height: 10,
               ),
               TextFormField(
+                controller: studentnameController,
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -151,6 +176,7 @@ class _AddstudentHomeState extends State<AddstudentHome> {
                 height: 10,
               ),
               TextFormField(
+                controller: departmentController,
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -162,6 +188,7 @@ class _AddstudentHomeState extends State<AddstudentHome> {
                 height: 10,
               ),
               TextFormField(
+                controller: yearController,
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -173,6 +200,7 @@ class _AddstudentHomeState extends State<AddstudentHome> {
                 height: 10,
               ),
               TextFormField(
+                controller: emailController,
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -184,6 +212,7 @@ class _AddstudentHomeState extends State<AddstudentHome> {
                 height: 10,
               ),
               TextFormField(
+                controller: passwordController,
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -195,6 +224,7 @@ class _AddstudentHomeState extends State<AddstudentHome> {
                 height: 10,
               ),
               TextFormField(
+                controller: dateofbirthController,
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -212,7 +242,7 @@ class _AddstudentHomeState extends State<AddstudentHome> {
                   // You can access the entered values using the controllers of each TextFormField
                 },
                 style: ButtonStyle(
-                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20)))),
                 child: Text('Submit'),
               ),

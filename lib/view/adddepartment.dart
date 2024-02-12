@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/Adminhome.dart';
 
@@ -9,7 +11,23 @@ class AddDepartmentHome extends StatefulWidget {
 }
 
 class _AddDepartmentHomeState extends State<AddDepartmentHome> {
+  //text controllers
+  final user = FirebaseAuth.instance.currentUser;
+
+  final TextEditingController departmentController = TextEditingController();
   @override
+  void dispose() {
+    departmentController.dispose();
+
+    super.dispose();
+  }
+
+  Future adddepartmentdetails(String department) async {
+    await FirebaseFirestore.instance.collection('departmentdetails').add({
+      'department': department,
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -65,6 +83,7 @@ class _AddDepartmentHomeState extends State<AddDepartmentHome> {
               ),
               SizedBox(height: 20),
               TextFormField(
+                controller: departmentController,
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -76,11 +95,22 @@ class _AddDepartmentHomeState extends State<AddDepartmentHome> {
               ElevatedButton(
                 onPressed: () {
                   // Add logic to handle form submission
-                  // You can access the entered values using the controllers of each TextFormField
+                  String department = departmentController.text.trim();
+
+                  // Check if the department is not empty before saving
+                  if (department.isNotEmpty) {
+                    adddepartmentdetails(department);
+                    // Optionally, you can add navigation or show a success message here
+                  } else {
+                    // Handle the case when the department is empty
+                    // You might want to display an error message or take appropriate action
+                  }
                 },
                 style: ButtonStyle(
-                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)))),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  )),
+                ),
                 child: Text('Submit'),
               ),
             ],
