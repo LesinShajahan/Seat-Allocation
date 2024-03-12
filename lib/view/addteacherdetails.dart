@@ -62,7 +62,11 @@ class _AddTeacherHomeState extends State<AddTeacherHome> {
 
     // If there are no documents matching the query, add the teacher details
     if (querySnapshot.docs.isEmpty) {
-      await FirebaseFirestore.instance.collection('teacherdetails').add({
+      await FirebaseFirestore.instance
+          .collection(
+              'teacherdetails') // Assuming 'teacherdetails' is the collection name
+          .doc(teachername) // Set the document ID as the teacher name
+          .set({
         'ID number': IDnnumber,
         'teacher name': teachername,
         'department': department,

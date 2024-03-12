@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seat_allocation/view/studenthome.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -24,6 +25,10 @@ class _LoginPageState extends State<LoginPage> {
       String password = _passwordController.text;
       print('Username: $username, Password: $password');
       // Add your login validation logic here
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => StudentHome()),
+      );
     }
   }
 

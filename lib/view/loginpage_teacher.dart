@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:seat_allocation/view/studenthome.dart';
+import 'package:seat_allocation/view/teacherhome.dart';
 
-class loginpage_teacher extends StatefulWidget {
+class LoginPageTeacher extends StatefulWidget {
   @override
-  _loginpage_teacherState createState() => _loginpage_teacherState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _loginpage_teacherState extends State<loginpage_teacher> {
+class _LoginPageState extends State<LoginPageTeacher> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -24,6 +26,10 @@ class _loginpage_teacherState extends State<loginpage_teacher> {
       String password = _passwordController.text;
       print('Username: $username, Password: $password');
       // Add your login validation logic here
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TeacherHome()),
+      );
     }
   }
 
@@ -69,12 +75,9 @@ class _loginpage_teacherState extends State<loginpage_teacher> {
                     controller: _usernameController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                        labelText: 'E-mail',
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(width: 3, color: Colors.red),
-                          borderRadius: BorderRadius.circular(15),
-                        )),
+                      labelText: 'E-mail',
+                      border: InputBorder.none,
+                    ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
@@ -88,12 +91,9 @@ class _loginpage_teacherState extends State<loginpage_teacher> {
                     controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                        labelText: 'Password',
-                        focusedBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(width: 3, color: Colors.red),
-                          borderRadius: BorderRadius.circular(15),
-                        )),
+                      labelText: 'Password',
+                      border: InputBorder.none,
+                    ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
@@ -103,12 +103,9 @@ class _loginpage_teacherState extends State<loginpage_teacher> {
                     },
                   ),
                   SizedBox(height: 32),
-                  GestureDetector(
-                    onTap: _performLogin,
-                    child: ElevatedButton(
-                      onPressed: _performLogin,
-                      child: Text('Login'),
-                    ),
+                  ElevatedButton(
+                    onPressed: _performLogin,
+                    child: Text('Login'),
                   ),
                   SizedBox(height: 16),
                 ],

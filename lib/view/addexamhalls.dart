@@ -4,60 +4,62 @@ import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/Adminhome.dart';
 
 class AddExamhall extends StatefulWidget {
-  const AddExamhall({super.key});
+  const AddExamhall({Key? key}) : super(key: key);
 
   @override
   State<AddExamhall> createState() => _AddExamhallState();
 }
 
-//text controllers
-final user = FirebaseAuth.instance.currentUser;
-
-final TextEditingController hallnameController = TextEditingController();
-final TextEditingController blocknameController = TextEditingController();
-final TextEditingController floorController = TextEditingController();
-final TextEditingController seatingcapacityController = TextEditingController();
+// Text controllers
+final TextEditingController hallIdController = TextEditingController();
+final TextEditingController capacityController = TextEditingController();
 
 Future<void> addexamhalls(
-  String hallname,
-  String blockname,
-  String floor,
-  int seatingcapacity,
+  String hallId,
+  int capacity,
   BuildContext context,
 ) async {
-  // Query Firestore to check if the exam hall already exists
-  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+  // Reference to the subcollection using the hallId as document ID
+  CollectionReference examHallCollection = FirebaseFirestore.instance
       .collection('examhall')
-      .where('hallname', isEqualTo: hallname)
-      .where('blockname', isEqualTo: blockname)
-      .get();
+      .doc('examhall@sa')
+      .collection(hallId);
 
-  // If there are no documents matching the query, add the exam hall
-  if (querySnapshot.docs.isEmpty) {
-    await FirebaseFirestore.instance.collection('examhall').add({
-      'hallname': hallname,
-      'blockname': blockname,
-      'floor': floor,
-      'seating capacity': seatingcapacity,
-    });
+  try {
+    // Check if the exam hall already exists
+    QuerySnapshot querySnapshot = await examHallCollection.get();
 
-    // Clear the text fields after submission
-    hallnameController.clear();
-    blocknameController.clear();
-    floorController.clear();
-    seatingcapacityController.clear();
+    // If the hall doesn't exist, add it to Firestore
+    if (querySnapshot.docs.isEmpty) {
+      await examHallCollection.doc(hallId).set({
+        'hall_id': hallId,
+        'capacity': capacity,
+      });
 
-    // Optionally, you can show a snackbar or navigate to another screen upon successful submission
+      // Clear text fields after submission
+      hallIdController.clear();
+      capacityController.clear();
+
+      // Show a snackbar upon successful submission
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Exam hall details submitted successfully!'),
+        ),
+      );
+    } else {
+      // If the hall already exists, display a message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Exam hall already exists!'),
+        ),
+      );
+    }
+  } catch (e) {
+    // Handle errors here, such as displaying an error message
+    print('Error adding exam hall: $e');
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Exam hall details submitted successfully!'),
-      ),
-    );
-  } else {
-    // If the exam hall already exists, display a message indicating that
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Exam hall already exists!'),
+        content: Text('An error occurred. Please try again later.'),
       ),
     );
   }
@@ -66,11 +68,8 @@ Future<void> addexamhalls(
 class _AddExamhallState extends State<AddExamhall> {
   @override
   void dispose() {
-    hallnameController.dispose();
-    blocknameController.dispose();
-    floorController.dispose();
-    seatingcapacityController.dispose();
-
+    hallIdController.dispose();
+    capacityController.dispose();
     super.dispose();
   }
 
@@ -131,72 +130,35 @@ class _AddExamhallState extends State<AddExamhall> {
               ),
               SizedBox(height: 20),
               TextFormField(
-                controller: hallnameController,
+                controller: hallIdController,
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    labelText: 'Hall Name',
+                    labelText: 'Hall ID',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20))),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
               TextFormField(
-                controller: blocknameController,
+                controller: capacityController,
+                keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    labelText: 'Block Name',
+                    labelText: 'Capacity',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20))),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: floorController,
-                decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    labelText: 'Floor',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                controller: seatingcapacityController,
-                decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    labelText: 'Seating Capacity',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                height: 10,
               ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
-                  String hallname = hallnameController.text.trim();
-                  String blockname = blocknameController.text.trim();
-                  String floor = floorController.text.trim();
-                  int seatingCapacity =
-                      int.tryParse(seatingcapacityController.text.trim()) ?? 0;
+                  String hallId = hallIdController.text.trim();
+                  int capacity =
+                      int.tryParse(capacityController.text.trim()) ?? 0;
 
-                  if (hallname.isNotEmpty &&
-                      blockname.isNotEmpty &&
-                      floor.isNotEmpty &&
-                      seatingCapacity > 0) {
+                  if (hallId.isNotEmpty && capacity > 0) {
                     // Call the function to add data to Firebase
-                    await addexamhalls(
-                        hallname, blockname, floor, seatingCapacity, context);
+                    await addexamhalls(hallId, capacity, context);
                   } else {
                     // Show an error message if any of the fields are empty
                     ScaffoldMessenger.of(context).showSnackBar(

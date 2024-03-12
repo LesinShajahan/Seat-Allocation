@@ -154,3 +154,6 @@ class MyApp extends StatelessWidget {
 
 
 =========================================================================================================================================================
+
+
+logout button of "Student home" navigate to "studentlogin"

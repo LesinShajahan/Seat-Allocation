@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seat_allocation/view/addstudentdetails.dart';
 
 class TeacherHome extends StatelessWidget {
   const TeacherHome({Key? key}) : super(key: key);
@@ -37,7 +38,11 @@ class TeacherHome extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                // Add your logic for "ADD STUDENTS" button here
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddstudentHome(),
+                    ));
               },
               child: Text("ADD STUDENTS"),
             ),

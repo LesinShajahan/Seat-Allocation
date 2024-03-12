@@ -5,6 +5,8 @@ import 'package:seat_allocation/view/addexamhalls.dart';
 import 'package:seat_allocation/view/addstudentdetails.dart';
 import 'package:seat_allocation/view/addteacherdetails.dart';
 import 'package:seat_allocation/view/loginpage_admin.dart';
+import 'package:seat_allocation/view/seatallocation.dart';
+import 'package:seat_allocation/view/welcomePage.dart';
 
 class AdminHome extends StatelessWidget {
   const AdminHome({Key? key}) : super(key: key);
@@ -16,6 +18,7 @@ class AdminHome extends StatelessWidget {
         backgroundColor: Color.fromARGB(255, 19, 57, 85),
         leading: IconButton(
           icon: Icon(Icons.menu),
+          color: Colors.white,
           onPressed: () {
             // Add your menu icon onPressed logic here
           },
@@ -23,6 +26,7 @@ class AdminHome extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.notifications),
+            color: Colors.white,
             onPressed: () {
               // Add your notification icon onPressed logic here
             },
@@ -30,8 +34,8 @@ class AdminHome extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
-              backgroundImage:
-                  NetworkImage('https://example.com/user_profile_image.jpg'),
+              backgroundImage: NetworkImage(
+                  'gs://seat-allocation-3dffa.appspot.com/WhatsApp Image 2024-03-12 at 10.14.01 AM.jpeg'),
             ),
           ),
         ],
@@ -107,6 +111,11 @@ class AdminHome extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       // Add your "SEAT ALLOCATION" button onPressed logic here
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SeatAllocation(),
+                          ));
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color.fromARGB(255, 19, 57, 85),
@@ -120,6 +129,11 @@ class AdminHome extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       // Add your "ADD EXAM HALLS" button onPressed logic here
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddExamhall(),
+                          ));
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color.fromARGB(255, 19, 57, 85),
@@ -228,10 +242,14 @@ class AdminHome extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          FirebaseAuth.instance.signOut();
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => WelcomePage()),
+          );
         },
         child: Icon(Icons.logout),
         backgroundColor: Color.fromARGB(255, 19, 57, 85),
+        foregroundColor: Colors.white,
         // You can change the color as per your preference
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

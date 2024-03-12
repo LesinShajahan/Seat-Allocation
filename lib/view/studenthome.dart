@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:seat_allocation/view/student%20LoginPage.dart';
+
+// Assuming you have a file named student_login_page.dart for the student login page
 
 class StudentHome extends StatelessWidget {
-  // Create a GlobalKey for the Scaffold
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   StudentHome({Key? key}) : super(key: key);
 
+  void _logout(BuildContext context) {
+    // Perform any necessary logout operations here
+    // For example, clearing user session, etc.
+
+    // Navigate to the StudentLoginPage
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Assign the GlobalKey to the Scaffold
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 19, 57, 85),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
-            // Open the drawer using the GlobalKey
             _scaffoldKey.currentState?.openDrawer();
           },
         ),
@@ -29,7 +41,6 @@ class StudentHome extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
-              // Add user details here, e.g., user profile image
               backgroundImage:
                   NetworkImage('https://example.com/user_profile_image.jpg'),
             ),
@@ -94,7 +105,7 @@ class StudentHome extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your logout button onPressed logic here
+          _logout(context); // Call the logout function
         },
         child: Icon(Icons.logout),
         backgroundColor: Color.fromARGB(255, 19, 57, 85),

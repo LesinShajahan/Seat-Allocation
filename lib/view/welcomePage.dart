@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:seat_allocation/view/Loginpage.dart';
 import 'package:seat_allocation/view/loginpage_admin.dart';
 import 'package:seat_allocation/view/loginpage_teacher.dart';
+import 'package:seat_allocation/view/student%20LoginPage.dart';
+
 // import 'package:seat_allocation/view/lojnas.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -19,11 +20,17 @@ class WelcomePage extends StatelessWidget {
                 children: [
                   Text(
                     "Welcome to",
-                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white),
                   ),
                   Text(
                     "F A L S",
-                    style: TextStyle(fontSize: 50, fontWeight: FontWeight.w900),
+                    style: TextStyle(
+                        fontSize: 50,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white),
                   ),
                   SizedBox(
                     height: 20,
@@ -39,7 +46,7 @@ class WelcomePage extends StatelessWidget {
                                   builder: (context) => LoginPage(),
                                 ));
                           },
-                          child: Icon(Icons.person_2_rounded),
+                          child: Icon(Icons.school),
                           style: ButtonStyle(
                             padding:
                                 MaterialStatePropertyAll(EdgeInsets.all(30)),
@@ -52,10 +59,10 @@ class WelcomePage extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => loginpage_teacher(),
+                                  builder: (context) => LoginPageTeacher(),
                                 ));
                           },
-                          child: Icon(Icons.person_add_disabled_sharp),
+                          child: Icon(Icons.person),
                           style: ButtonStyle(
                             padding:
                                 MaterialStatePropertyAll(EdgeInsets.all(30)),

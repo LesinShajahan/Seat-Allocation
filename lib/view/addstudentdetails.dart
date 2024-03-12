@@ -68,7 +68,11 @@ class _AddstudentHomeState extends State<AddstudentHome> {
 
     // If there are no documents matching the query, add the student details
     if (querySnapshot.docs.isEmpty) {
-      await FirebaseFirestore.instance.collection('studentsdetails').add({
+      await FirebaseFirestore.instance
+          .collection(
+              'studentsdetails') // Assuming 'studentsdetails' is the collection name
+          .doc(studentname) // Set the document ID as the student name
+          .set({
         'registration number': registrationnumber,
         'student name': studentname,
         'department': department,
@@ -77,6 +81,15 @@ class _AddstudentHomeState extends State<AddstudentHome> {
         'password': password,
         'date of birth': dateofbirth,
       });
+
+      // Clear text controllers after successful submission
+      registrationnumberController.clear();
+      studentnameController.clear();
+      departmentController.clear();
+      yearController.clear();
+      emailController.clear();
+      passwordController.clear();
+      dateofbirthController.clear();
 
       // Optionally, you can show a snackbar or navigate to another screen upon successful submission
       ScaffoldMessenger.of(context).showSnackBar(
