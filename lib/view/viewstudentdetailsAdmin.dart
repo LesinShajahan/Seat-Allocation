@@ -2,26 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:seat_allocation/view/Adminhome.dart';
 
-class ViewTeachers extends StatefulWidget {
-  ViewTeachers({Key? key}) : super(key: key);
+class ViewStudents extends StatefulWidget {
+  ViewStudents({Key? key}) : super(key: key);
 
   @override
-  State<ViewTeachers> createState() => _ViewTeachersState();
+  State<ViewStudents> createState() => _ViewStudentsState();
 }
 
-class _ViewTeachersState extends State<ViewTeachers> {
-  late Future<QuerySnapshot> teachersFuture;
+class _ViewStudentsState extends State<ViewStudents> {
+  late Future<QuerySnapshot> studentsFuture;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    teachersFuture = fetchTeachers();
+    studentsFuture = fetchStudents();
   }
 
-  Future<QuerySnapshot> fetchTeachers() async {
-    return FirebaseFirestore.instance.collection('teacherdetails').get();
+  Future<QuerySnapshot> fetchStudents() async {
+    return FirebaseFirestore.instance.collection('studentsdetails').get();
   }
 
   @override
@@ -68,7 +68,7 @@ class _ViewTeachersState extends State<ViewTeachers> {
             ),
             child: Center(
               child: Text(
-                'Teachers List',
+                'Student List',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0,
@@ -79,7 +79,7 @@ class _ViewTeachersState extends State<ViewTeachers> {
           ),
           const SizedBox(height: 30),
           FutureBuilder<QuerySnapshot>(
-            future: teachersFuture,
+            future: studentsFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -89,25 +89,28 @@ class _ViewTeachersState extends State<ViewTeachers> {
                 final List<DocumentSnapshot> documents = snapshot.data!.docs;
                 return Expanded(
                     child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columns: [
-                      DataColumn(label: Text('ID')),
-                      DataColumn(label: Text('Teacher Name')),
-                      DataColumn(label: Text('DOB')),
-                      DataColumn(label: Text('Dept')),
-                      // Add more columns if needed
-                    ],
-                    rows: documents.map((document) {
-                      final data = document.data() as Map<String, dynamic>;
-                      return DataRow(cells: [
-                        DataCell(Text(data['ID number'])),
-                        DataCell(Text(data['teacher name'])),
-                        DataCell(Text(data['date of birth'])),
-                        DataCell(Text(data['department'])),
-                        // Add more cells if needed
-                      ]);
-                    }).toList(),
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: DataTable(
+                      columns: [
+                        DataColumn(label: Text('Student Name')),
+                        DataColumn(label: Text('Reg No')),
+                        DataColumn(label: Text('Year')),
+                        DataColumn(label: Text('Dept')),
+                        // Add more columns if needed
+                      ],
+                      rows: documents.map((document) {
+                        final data = document.data() as Map<String, dynamic>;
+                        return DataRow(cells: [
+                          DataCell(Text(data['student name'])),
+                          DataCell(Text(data['registration number'])),
+                          DataCell(Text(data['year'].toString())),
+                          DataCell(Text(data['department'])),
+                          // Add more cells if needed
+                        ]);
+                      }).toList(),
+                    ),
                   ),
                 ));
               }

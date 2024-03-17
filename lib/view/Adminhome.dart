@@ -1,15 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/adddepartment.dart';
 import 'package:seat_allocation/view/addexamhalls.dart';
-import 'package:seat_allocation/view/addstudentdetails.dart';
+import 'package:seat_allocation/view/addstudentdetailsforadmin.dart';
 import 'package:seat_allocation/view/addteacherdetails.dart';
-import 'package:seat_allocation/view/loginpage_admin.dart';
 import 'package:seat_allocation/view/seatallocation.dart';
+import 'package:seat_allocation/view/viewdepartments.dart';
+import 'package:seat_allocation/view/viewexamhalls.dart';
+import 'package:seat_allocation/view/viewstudentdetailsAdmin.dart';
+import 'package:seat_allocation/view/viewteacherdetails.dart';
 import 'package:seat_allocation/view/welcomePage.dart';
 
 class AdminHome extends StatelessWidget {
-  const AdminHome({Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  AdminHome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +24,7 @@ class AdminHome extends StatelessWidget {
           color: Colors.white,
           onPressed: () {
             // Add your menu icon onPressed logic here
+            _scaffoldKey.currentState?.openDrawer();
           },
         ),
         actions: [
@@ -35,10 +39,42 @@ class AdminHome extends StatelessWidget {
             padding: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
               backgroundImage: NetworkImage(
-                  'gs://seat-allocation-3dffa.appspot.com/WhatsApp Image 2024-03-12 at 10.14.01 AM.jpeg'),
+                  'https://i.ibb.co/P9X3m82/Whats-App-Image-2024-03-12-at-10-14-01-AM.jpg'),
             ),
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 19, 57, 85),
+              ),
+              child: Text(
+                'Menu Header',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text('Menu Item 1'),
+              onTap: () {
+                // Add your logic for menu item 1
+              },
+            ),
+            ListTile(
+              title: Text('Menu Item 2'),
+              onTap: () {
+                // Add your logic for menu item 2
+              },
+            ),
+            // Add more ListTile widgets for additional menu items
+          ],
+        ),
       ),
       body: ListView(
         children: [
@@ -87,22 +123,17 @@ class AdminHome extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddDepartmentHome(),
-                            ));
-                      };
-                      // Add your "ADD DEPARTMENT" button onPressed logic here
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddDepartmentHome(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color.fromARGB(255, 19, 57, 85),
                       fixedSize: Size(300, 0),
                     ),
-                    // style: ElevatedButton.styleFrom(
-                    //   primary: Color.fromARGB(255, 19, 57, 85),
-                    // ),
                     child: Text(
                       "ADD DEPARTMENT",
                       style: TextStyle(color: Colors.white),
@@ -171,7 +202,10 @@ class AdminHome extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // Add your "STUDENTS DETAILS" button onPressed logic here
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ViewStudents()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color.fromARGB(255, 19, 57, 85),
@@ -185,6 +219,11 @@ class AdminHome extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       // Add your "TEACHER DETAILS" button onPressed logic here
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewTeachers(),
+                          ));
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color.fromARGB(255, 19, 57, 85),
@@ -198,6 +237,11 @@ class AdminHome extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       // Add your "VIEW DEPARTMENTS" button onPressed logic here
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewDepartments(),
+                          ));
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color.fromARGB(255, 19, 57, 85),
@@ -211,6 +255,11 @@ class AdminHome extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       // Add your "VIEW EXAMHALLS" button onPressed logic here
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ViewExamhalls(),
+                          ));
                     },
                     style: ElevatedButton.styleFrom(
                       primary: Color.fromARGB(255, 19, 57, 85),
@@ -218,19 +267,6 @@ class AdminHome extends StatelessWidget {
                     ),
                     child: Text(
                       "VIEW EXAMHALLS",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Add your "EDIT DETAILS" button onPressed logic here
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 19, 57, 85),
-                      fixedSize: Size(300, 0),
-                    ),
-                    child: Text(
-                      "EDIT DETAILS",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/Adminhome.dart';
 
@@ -19,19 +18,16 @@ Future<void> addexamhalls(
   int capacity,
   BuildContext context,
 ) async {
-  // Reference to the subcollection using the hallId as document ID
-  CollectionReference examHallCollection = FirebaseFirestore.instance
-      .collection('examhall')
-      .doc('examhall@sa')
-      .collection(hallId);
-
+  // Reference to the document using the hallId
+  DocumentReference examHallRef =
+      FirebaseFirestore.instance.collection('examhall').doc(hallId);
   try {
     // Check if the exam hall already exists
-    QuerySnapshot querySnapshot = await examHallCollection.get();
+    DocumentSnapshot documentSnapshot = await examHallRef.get();
 
     // If the hall doesn't exist, add it to Firestore
-    if (querySnapshot.docs.isEmpty) {
-      await examHallCollection.doc(hallId).set({
+    if (!documentSnapshot.exists) {
+      await examHallRef.set({
         'hall_id': hallId,
         'capacity': capacity,
       });
@@ -50,7 +46,7 @@ Future<void> addexamhalls(
       // If the hall already exists, display a message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Exam hall already exists!'),
+          content: Text('Exam hall with this ID already exists!'),
         ),
       );
     }

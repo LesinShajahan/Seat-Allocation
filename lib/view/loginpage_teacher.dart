@@ -76,6 +76,11 @@ class _LoginPageState extends State<LoginPageTeacher> {
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       labelText: 'E-mail',
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(width: 3, color: Colors.red),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                       border: InputBorder.none,
                     ),
                     validator: (value) {
@@ -92,6 +97,11 @@ class _LoginPageState extends State<LoginPageTeacher> {
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(width: 3, color: Colors.red),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                       border: InputBorder.none,
                     ),
                     validator: (value) {

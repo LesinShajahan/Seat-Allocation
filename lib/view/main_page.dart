@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/Adminhome.dart';
-import 'package:seat_allocation/view/loginpage_admin.dart';
+import 'package:seat_allocation/view/welcomePage.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -15,7 +15,7 @@ class MainPage extends StatelessWidget {
           if (snapshot.hasData) {
             return AdminHome();
           } else {
-            return AdminLogin();
+            return WelcomePage();
           }
         },
       ),

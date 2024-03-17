@@ -23,7 +23,10 @@ class _AddDepartmentHomeState extends State<AddDepartmentHome> {
   }
 
   Future adddepartmentdetails(String department) async {
-    await FirebaseFirestore.instance.collection('departmentdetails').add({
+    await FirebaseFirestore.instance
+        .collection('departmentdetails')
+        .doc(department) // Use department name as document ID
+        .set({
       'department': department,
     });
   }

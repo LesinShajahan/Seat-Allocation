@@ -1,76 +1,83 @@
+import 'package:firebase/firebase.dart' as fb;
+
 class Student {
-  final String name;
+  final String registrationNumber;
   final String department;
 
-  Student({required this.name, required this.department});
+  Student({required this.registrationNumber, required this.department});
 }
 
-class Classroom {
-  final List<Student> students;
-  final int maxCapacity;
+class ExamHall {
+  final String hallId;
+  final int capacity;
 
-  Classroom({required this.students, required this.maxCapacity});
+  ExamHall({required this.hallId, required this.capacity});
 }
 
-List<Classroom> arrangeStudents(
-    List<Student> csStudents, List<Student> microStudents) {
-  List<Student> arrangedStudents = [];
+Future<Map<String, List<Student>>> arrangeStudentsInExamHalls() async {
+  // Retrieve student details from Firebase
+  final studentsSnapshot =
+      await fb.firestore().collection("studentsdetails").get();
 
-  // Assuming both lists have equal length, otherwise adjust as needed
-  int totalStudents = csStudents.length;
+  List<Student> students = studentsSnapshot.docs.map((doc) {
+    return Student(
+      registrationNumber: doc.data()["registration_number"],
+      department: doc.data()["department"],
+    );
+  }).toList();
 
-  for (int i = 0; i < totalStudents; i++) {
-    // Add CS student
-    arrangedStudents.add(csStudents[i]);
+  // Retrieve exam hall details from Firebase
+  final examHallsSnapshot = await fb.firestore().collection("examhall").get();
 
-    // Add Micro student
-    arrangedStudents.add(microStudents[i]);
+  List<ExamHall> examHalls = examHallsSnapshot.docs.map((doc) {
+    return ExamHall(
+      hallId: doc.data()["hall_id"],
+      capacity: doc.data()["capacity"],
+    );
+  }).toList();
 
-    // Add another CS student
-    arrangedStudents.add(csStudents[i]);
-  }
+  // Sort students based on department
+  students.sort((a, b) => a.department.compareTo(b.department));
 
-  // Shuffle the arranged students to distribute them randomly among classrooms
-  arrangedStudents.shuffle();
+  Map<String, List<Student>> seatAllocations = {};
 
-  // Divide students among classrooms
-  int studentsPerClassroom = arrangedStudents.length ~/ 3;
+  int studentIndex = 0;
+  for (var hall in examHalls) {
+    // Allocate students to exam hall
+    List<Student> allocatedStudents = [];
+    int remainingSeats = hall.capacity;
+    String currentDepartment = ""; // Track current department
 
-  List<Classroom> classrooms = [];
-  for (int i = 0; i < 3; i++) {
-    int start = i * studentsPerClassroom;
-    int end = (i + 1) * studentsPerClassroom;
-    List<Student> studentsForClassroom = arrangedStudents.sublist(start, end);
-    classrooms.add(Classroom(students: studentsForClassroom, maxCapacity: 30));
-  }
-
-  return classrooms;
-}
-
-void main() {
-  // Sample data
-  List<Student> csStudents = [
-    Student(name: "CS Student 1", department: "CS"),
-    Student(name: "CS Student 2", department: "CS"),
-    Student(name: "CS Student 3", department: "CS"),
-    // Add more CS students as needed
-  ];
-
-  List<Student> microStudents = [
-    Student(name: "Micro Student 1", department: "Micro"),
-    Student(name: "Micro Student 2", department: "Micro"),
-    Student(name: "Micro Student 3", department: "Micro"),
-    // Add more Micro students as needed
-  ];
-
-  // Arrange students into classrooms
-  List<Classroom> classrooms = arrangeStudents(csStudents, microStudents);
-
-  // Display classrooms and their students
-  for (int i = 0; i < classrooms.length; i++) {
-    print("Classroom ${i + 1}:");
-    for (var student in classrooms[i].students) {
-      print("  Name: ${student.name}, Department: ${student.department}");
+    while (remainingSeats > 0 && studentIndex < students.length) {
+      // Pick the next student from a different department
+      Student nextStudent = students[studentIndex];
+      if (nextStudent.department != currentDepartment) {
+        allocatedStudents.add(nextStudent);
+        studentIndex++;
+        remainingSeats--;
+        currentDepartment = nextStudent.department;
+      } else {
+        // Skip the current student and search for the next student from a different department
+        studentIndex++;
+      }
     }
+
+    // Store allocated students in the map
+    seatAllocations[hall.hallId] = allocatedStudents;
   }
+
+  return seatAllocations;
+}
+
+void main() async {
+  Map<String, List<Student>> seatAllocations =
+      await arrangeStudentsInExamHalls();
+  print("Seat allocations:");
+  seatAllocations.forEach((hallId, students) {
+    print("Hall ID: $hallId");
+    students.forEach((student) {
+      print(
+          "  Registration Number: ${student.registrationNumber}, Department: ${student.department}");
+    });
+  });
 }

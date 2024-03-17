@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/view/Adminhome.dart';
 
@@ -53,25 +52,26 @@ class _AddstudentHomeState extends State<AddstudentHome> {
   }
 
   Future<void> addStudentdetails(
-      String registrationnumber,
-      String studentname,
-      String department,
-      int year,
-      String email,
-      String password,
-      String dateofbirth) async {
-    // Query Firestore to check if a student with the same registration number already exists
+    String registrationnumber,
+    String studentname,
+    String department,
+    int year,
+    String email,
+    String password,
+    String dateofbirth,
+  ) async {
+    // Query Firestore to check if a student with the same registration number and department already exists
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('studentsdetails')
         .where('registration number', isEqualTo: registrationnumber)
+        .where('department', isEqualTo: department)
         .get();
 
     // If there are no documents matching the query, add the student details
     if (querySnapshot.docs.isEmpty) {
       await FirebaseFirestore.instance
-          .collection(
-              'studentsdetails') // Assuming 'studentsdetails' is the collection name
-          .doc(studentname) // Set the document ID as the student name
+          .collection('studentsdetails')
+          .doc(studentname)
           .set({
         'registration number': registrationnumber,
         'student name': studentname,
@@ -91,18 +91,18 @@ class _AddstudentHomeState extends State<AddstudentHome> {
       passwordController.clear();
       dateofbirthController.clear();
 
-      // Optionally, you can show a snackbar or navigate to another screen upon successful submission
+      // Show a snackbar upon successful submission
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Student details submitted successfully!'),
         ),
       );
     } else {
-      // If a student with the same registration number already exists, display a message indicating that
+      // If a student with the same registration number and department already exists, display a message indicating that
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text('Student with this registration number already exists!'),
+          content: Text(
+              'Student with this registration number already exists for this department!'),
         ),
       );
     }

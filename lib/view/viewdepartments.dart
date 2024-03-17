@@ -1,10 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:seat_allocation/view/Adminhome.dart';
 
-class ViewDepartments extends StatelessWidget {
+class ViewDepartments extends StatefulWidget {
+  ViewDepartments({Key? key}) : super(key: key);
+
+  @override
+  State<ViewDepartments> createState() => _ViewDepartmentsState();
+}
+
+class _ViewDepartmentsState extends State<ViewDepartments> {
+  late Future<QuerySnapshot> departmentFuture;
+
+  void initState() {
+    super.initState();
+    departmentFuture = fetchDepartment();
+  }
+
+  Future<QuerySnapshot> fetchDepartment() async {
+    return FirebaseFirestore.instance.collection('departmentdetails').get();
+  }
+
   // Create a GlobalKey for the Scaffold
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  ViewDepartments({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +31,14 @@ class ViewDepartments extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 19, 57, 85),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(Icons.arrow_back_ios_new_outlined),
           onPressed: () {
-            // Open the drawer using the GlobalKey
-            _scaffoldKey.currentState?.openDrawer();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminHome(),
+              ),
+            );
           },
         ),
         actions: [
@@ -36,38 +58,7 @@ class ViewDepartments extends StatelessWidget {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 19, 57, 85),
-              ),
-              child: Text(
-                'Menu Header',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text('Menu Item 1'),
-              onTap: () {
-                // Add your logic for menu item 1
-              },
-            ),
-            ListTile(
-              title: Text('Menu Item 2'),
-              onTap: () {
-                // Add your logic for menu item 2
-              },
-            ),
-            // Add more ListTile widgets for additional menu items
-          ],
-        ),
-      ),
+
       body: Column(
         children: [
           SizedBox(height: 50),
@@ -89,7 +80,35 @@ class ViewDepartments extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 30),
-          const Placeholder(),
+          const SizedBox(height: 30),
+          FutureBuilder<QuerySnapshot>(
+            future: departmentFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                final List<DocumentSnapshot> documents = snapshot.data!.docs;
+                return Expanded(
+                    child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: DataTable(
+                    columns: [
+                      DataColumn(label: Text('Department Name')),
+                      // Add more columns if needed
+                    ],
+                    rows: documents.map((document) {
+                      final data = document.data() as Map<String, dynamic>;
+                      return DataRow(cells: [
+                        DataCell(Center(child: Text(data['department']))),
+                      ]);
+                    }).toList(),
+                  ),
+                ));
+              }
+            },
+          ),
         ],
       ),
     );

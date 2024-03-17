@@ -1,10 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:seat_allocation/view/Adminhome.dart';
 
-class ViewExamhalls extends StatelessWidget {
+class ViewExamhalls extends StatefulWidget {
+  ViewExamhalls({Key? key}) : super(key: key);
+
+  @override
+  State<ViewExamhalls> createState() => _ViewExamhallsState();
+}
+
+class _ViewExamhallsState extends State<ViewExamhalls> {
+  late Future<QuerySnapshot> examhallFuture;
+
   // Create a GlobalKey for the Scaffold
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  void initState() {
+    super.initState();
+    examhallFuture = fetchExamhall();
+  }
 
-  ViewExamhalls({Key? key}) : super(key: key);
+  Future<QuerySnapshot> fetchExamhall() async {
+    return FirebaseFirestore.instance.collection('examhall').get();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +31,14 @@ class ViewExamhalls extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 19, 57, 85),
         leading: IconButton(
-          icon: Icon(Icons.menu),
+          icon: Icon(Icons.arrow_back_ios_new_outlined),
           onPressed: () {
-            // Open the drawer using the GlobalKey
-            _scaffoldKey.currentState?.openDrawer();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminHome(),
+              ),
+            );
           },
         ),
         actions: [
@@ -35,38 +57,6 @@ class ViewExamhalls extends StatelessWidget {
             ),
           ),
         ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 19, 57, 85),
-              ),
-              child: Text(
-                'Menu Header',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text('Menu Item 1'),
-              onTap: () {
-                // Add your logic for menu item 1
-              },
-            ),
-            ListTile(
-              title: Text('Menu Item 2'),
-              onTap: () {
-                // Add your logic for menu item 2
-              },
-            ),
-            // Add more ListTile widgets for additional menu items
-          ],
-        ),
       ),
       body: Column(
         children: [
@@ -89,7 +79,39 @@ class ViewExamhalls extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 30),
-          const Placeholder(),
+          FutureBuilder<QuerySnapshot>(
+            future: examhallFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                final List<DocumentSnapshot> documents = snapshot.data!.docs;
+                return Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: DataTable(
+                      columns: [
+                        DataColumn(label: Text('Hall ID')),
+                        DataColumn(label: Text('Capacity')),
+                        // Add more columns if needed
+                      ],
+                      rows: documents.map((document) {
+                        final data = document.data() as Map<String, dynamic>;
+                        return DataRow(cells: [
+                          DataCell(Text(document
+                              .id)), // Assuming 'hall_id' is stored as the document ID
+                          DataCell(Text(data['capacity'].toString())),
+                          // Add more cells if needed
+                        ]);
+                      }).toList(),
+                    ),
+                  ),
+                );
+              }
+            },
+          )
         ],
       ),
     );
