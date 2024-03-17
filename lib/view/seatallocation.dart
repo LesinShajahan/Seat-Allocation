@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class SeatAllocation extends StatefulWidget {
   SeatAllocation({Key? key}) : super(key: key);
@@ -18,8 +18,6 @@ class _SeatAllocationState extends State<SeatAllocation> {
       // Query Firestore to fetch the hall details based on the hall ID
       DocumentSnapshot hallSnapshot = await FirebaseFirestore.instance
           .collection('examhall')
-          .doc('examhall@sa')
-          .collection(hallId)
           .doc(hallId)
           .get();
 
@@ -58,7 +56,10 @@ class _SeatAllocationState extends State<SeatAllocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Seat Allocation"),
+        title: Text(
+          "SEAT ALLOCATION",
+          style: TextStyle(color: Colors.white), // Set text color to white
+        ),
         backgroundColor: Color.fromARGB(255, 19, 57, 85),
       ),
       body: Padding(

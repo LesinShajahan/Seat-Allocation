@@ -96,8 +96,8 @@ class _AddExamhallState extends State<AddExamhall> {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
-              backgroundImage:
-                  NetworkImage('https://example.com/user_profile_image.jpg'),
+              backgroundImage: NetworkImage(
+                  'https://i.ibb.co/P9X3m82/Whats-App-Image-2024-03-12-at-10-14-01-AM.jpg'),
             ),
           ),
         ],
