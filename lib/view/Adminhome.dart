@@ -86,7 +86,7 @@ class AdminHome extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 19, 57, 85),
+                      backgroundColor: Color.fromARGB(255, 19, 57, 85),
                       fixedSize: Size(300, 0),
                     ),
                     onPressed: () {
@@ -112,7 +112,7 @@ class AdminHome extends StatelessWidget {
                             ));
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Color.fromARGB(255, 19, 57, 85),
+                        backgroundColor: Color.fromARGB(255, 19, 57, 85),
                         fixedSize: Size(300, 0),
                       ),
                       child: Text(
@@ -131,7 +131,7 @@ class AdminHome extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 19, 57, 85),
+                      backgroundColor: Color.fromARGB(255, 19, 57, 85),
                       fixedSize: Size(300, 0),
                     ),
                     child: Text(
@@ -149,7 +149,7 @@ class AdminHome extends StatelessWidget {
                           ));
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 19, 57, 85),
+                      backgroundColor: Color.fromARGB(255, 19, 57, 85),
                       fixedSize: Size(300, 0),
                     ),
                     child: Text(
@@ -167,7 +167,7 @@ class AdminHome extends StatelessWidget {
                           ));
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 19, 57, 85),
+                      backgroundColor: Color.fromARGB(255, 19, 57, 85),
                       fixedSize: Size(300, 0),
                     ),
                     child: Text(
@@ -187,7 +187,7 @@ class AdminHome extends StatelessWidget {
                       // Add your "VIEW SEATING ARRANGEMENTS" button onPressed logic here
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 19, 57, 85),
+                      backgroundColor: Color.fromARGB(255, 19, 57, 85),
                       fixedSize: Size(300, 0),
                     ),
                     child: Row(
@@ -208,7 +208,7 @@ class AdminHome extends StatelessWidget {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 19, 57, 85),
+                      backgroundColor: Color.fromARGB(255, 19, 57, 85),
                       fixedSize: Size(300, 0),
                     ),
                     child: Text(
@@ -226,7 +226,7 @@ class AdminHome extends StatelessWidget {
                           ));
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 19, 57, 85),
+                      backgroundColor: Color.fromARGB(255, 19, 57, 85),
                       fixedSize: Size(300, 0),
                     ),
                     child: Text(
@@ -244,7 +244,7 @@ class AdminHome extends StatelessWidget {
                           ));
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 19, 57, 85),
+                      backgroundColor: Color.fromARGB(255, 19, 57, 85),
                       fixedSize: Size(300, 0),
                     ),
                     child: Text(
@@ -262,7 +262,7 @@ class AdminHome extends StatelessWidget {
                           ));
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color.fromARGB(255, 19, 57, 85),
+                      backgroundColor: Color.fromARGB(255, 19, 57, 85),
                       fixedSize: Size(300, 0),
                     ),
                     child: Text(

@@ -8,13 +8,13 @@ class Student {
 }
 
 class ExamHall {
-  final String hallId;
+  final int hallId;
   final int capacity;
 
   ExamHall({required this.hallId, required this.capacity});
 }
 
-Future<Map<String, List<Student>>> arrangeStudentsInExamHalls() async {
+Future<Map<int, List<Student>>> arrangeStudentsInExamHalls() async {
   // Retrieve student details from Firebase
   final studentsSnapshot =
       await fb.firestore().collection("studentsdetails").get();
@@ -39,7 +39,7 @@ Future<Map<String, List<Student>>> arrangeStudentsInExamHalls() async {
   // Sort students based on department
   students.sort((a, b) => a.department.compareTo(b.department));
 
-  Map<String, List<Student>> seatAllocations = {};
+  Map<int, List<Student>> seatAllocations = {};
 
   int studentIndex = 0;
   for (var hall in examHalls) {
@@ -70,8 +70,7 @@ Future<Map<String, List<Student>>> arrangeStudentsInExamHalls() async {
 }
 
 void main() async {
-  Map<String, List<Student>> seatAllocations =
-      await arrangeStudentsInExamHalls();
+  Map<int, List<Student>> seatAllocations = await arrangeStudentsInExamHalls();
   print("Seat allocations:");
   seatAllocations.forEach((hallId, students) {
     print("Hall ID: $hallId");
