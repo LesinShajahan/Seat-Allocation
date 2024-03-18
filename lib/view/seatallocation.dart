@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class SeatAllocation extends StatefulWidget {
   SeatAllocation({Key? key}) : super(key: key);
