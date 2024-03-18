@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:seat_allocation/view/teacherhome.dart';
 
 class LoginPageTeacher extends StatefulWidget {
@@ -18,17 +19,41 @@ class _LoginPageState extends State<LoginPageTeacher> {
     super.dispose();
   }
 
-  void _performLogin() {
+  void _performLogin() async {
     if (_formKey.currentState?.validate() ?? false) {
-      // Perform login logic here
-      String username = _usernameController.text;
+      String email = _usernameController.text;
       String password = _passwordController.text;
-      print('Username: $username, Password: $password');
-      // Add your login validation logic here
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => TeacherHome()),
-      );
+
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('teacherdetails')
+          .where('email', isEqualTo: email)
+          .where('password', isEqualTo: password)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => TeacherHome()),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Login Failed"),
+              content: Text("Invalid email or password."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 
@@ -41,7 +66,7 @@ class _LoginPageState extends State<LoginPageTeacher> {
           color: Colors.white,
         ),
         backgroundColor: Colors.transparent,
-        elevation: 0, // Remove shadow
+        elevation: 0,
       ),
       body: SafeArea(
         child: Center(
@@ -86,7 +111,6 @@ class _LoginPageState extends State<LoginPageTeacher> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
                       }
-                      // Add more email validation logic if needed
                       return null;
                     },
                   ),
@@ -107,7 +131,6 @@ class _LoginPageState extends State<LoginPageTeacher> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
                       }
-                      // Add more password validation logic if needed
                       return null;
                     },
                   ),

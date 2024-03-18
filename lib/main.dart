@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:seat_allocation/firebase_options.dart';
+import 'package:seat_allocation/view/splashscreen.dart';
 import 'package:seat_allocation/view/welcomePage.dart';
 
 void main() async {
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WelcomePage(),
+      home: SplashScreen(),
     );
   }
 }

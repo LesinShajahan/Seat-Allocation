@@ -1,4 +1,4 @@
-import 'package:firebase/firebase.dart' as fb;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Student {
   final String registrationNumber;
@@ -15,9 +15,9 @@ class ExamHall {
 }
 
 Future<Map<int, List<Student>>> arrangeStudentsInExamHalls() async {
-  // Retrieve student details from Firebase
+  // Retrieve student details from Firestore
   final studentsSnapshot =
-      await fb.firestore().collection("studentsdetails").get();
+      await FirebaseFirestore.instance.collection("studentsdetails").get();
 
   List<Student> students = studentsSnapshot.docs.map((doc) {
     return Student(
@@ -26,8 +26,9 @@ Future<Map<int, List<Student>>> arrangeStudentsInExamHalls() async {
     );
   }).toList();
 
-  // Retrieve exam hall details from Firebase
-  final examHallsSnapshot = await fb.firestore().collection("examhall").get();
+  // Retrieve exam hall details from Firestore
+  final examHallsSnapshot =
+      await FirebaseFirestore.instance.collection("examhall").get();
 
   List<ExamHall> examHalls = examHallsSnapshot.docs.map((doc) {
     return ExamHall(
@@ -36,7 +37,7 @@ Future<Map<int, List<Student>>> arrangeStudentsInExamHalls() async {
     );
   }).toList();
 
-  // Sort students based on department
+  // Sorting students based on department
   students.sort((a, b) => a.department.compareTo(b.department));
 
   Map<int, List<Student>> seatAllocations = {};

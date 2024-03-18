@@ -9,6 +9,14 @@ class SeatAllocation extends StatefulWidget {
 }
 
 class _SeatAllocationState extends State<SeatAllocation> {
+  TextEditingController hallIdController = TextEditingController();
+  String? hallName;
+  int? hallCapacity;
+  String? selectedDepartment1;
+  String? selectedDepartment2;
+  List<Map<String, dynamic>> students1 = [];
+  List<Map<String, dynamic>> students2 = [];
+
   Future<List<String>> fetchDepartments() async {
     QuerySnapshot departmentSnapshot =
         await FirebaseFirestore.instance.collection('departmentdetails').get();
@@ -17,34 +25,22 @@ class _SeatAllocationState extends State<SeatAllocation> {
     return departments;
   }
 
-  TextEditingController hallIdController = TextEditingController();
-  String? hallName;
-  int? hallcapacity;
-  String? selectedDepartment1;
-  String? selectedDepartment2;
-
   Future<void> fetchHallDetails(String hallId) async {
     try {
-      // Query Firestore to fetch the hall details based on the hall ID
       DocumentSnapshot hallSnapshot = await FirebaseFirestore.instance
           .collection('examhall')
           .doc(hallId)
           .get();
 
-      // Check if the hall exists in Firestore
       if (hallSnapshot.exists) {
-        // Extract hall details from the snapshot
         Map<String, dynamic> hallData =
             hallSnapshot.data() as Map<String, dynamic>;
 
-        // Update the UI with the fetched details
         setState(() {
-          hallcapacity = hallData['capacity'];
-          print(hallcapacity);
-          // You can add more fields to update the UI
+          hallCapacity = hallData['capacity'];
+          hallName = hallData['name'];
         });
       } else {
-        // If the hall does not exist, show an error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Hall with ID $hallId does not exist!'),
@@ -53,7 +49,6 @@ class _SeatAllocationState extends State<SeatAllocation> {
       }
     } catch (e) {
       print('Error fetching hall details: $e');
-      // Handle errors here, such as displaying an error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error fetching hall details: $e'),
@@ -61,9 +56,6 @@ class _SeatAllocationState extends State<SeatAllocation> {
       );
     }
   }
-
-  List<Map<String, dynamic>> students1 = [];
-  List<Map<String, dynamic>> students2 = [];
 
   Future<void> fetchStudentsFromDepartment() async {
     students1.clear();
@@ -78,12 +70,7 @@ class _SeatAllocationState extends State<SeatAllocation> {
       students1.addAll(studentsSnapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>));
 
-      // Shuffle the list of students1
       students1.shuffle();
-
-      for (Map<String, dynamic> student in students1) {
-        print('Student Details (Department 1): $student');
-      }
     }
 
     if (selectedDepartment2 != null) {
@@ -95,12 +82,7 @@ class _SeatAllocationState extends State<SeatAllocation> {
       students2.addAll(studentsSnapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>));
 
-      // Shuffle the list of students2
       students2.shuffle();
-
-      for (Map<String, dynamic> student in students2) {
-        print('Student Details (Department 2): $student');
-      }
     }
   }
 
@@ -168,13 +150,59 @@ class _SeatAllocationState extends State<SeatAllocation> {
     });
   }
 
+  List<String> allocateSeats() {
+    List<String> allocatedSeats = [];
+
+    int row = 1;
+    int seat = 1;
+
+    // Iterate through students1 and students2 lists
+    for (int i = 0; i < students1.length || i < students2.length; i++) {
+      // If students1 list has a student at index i
+      if (i < students1.length) {
+        // Assign seat to student from students1
+        String allocatedSeat =
+            'Row $row | Seat $seat | ${students1[i]['student name']} | ${students1[i]['department']}';
+        allocatedSeats.add(allocatedSeat);
+
+        // Increment seat index
+        seat++;
+
+        // If the seat exceeds the hall capacity per row, move to the next row
+        if (seat > hallCapacity!) {
+          row++;
+          seat = 1;
+        }
+      }
+
+      // If students2 list has a student at index i
+      if (i < students2.length) {
+        // Assign seat to student from students2
+        String allocatedSeat =
+            'Row $row | Seat $seat | ${students2[i]['student name']} | ${students2[i]['department']}';
+        allocatedSeats.add(allocatedSeat);
+
+        // Increment seat index
+        seat++;
+
+        // If the seat exceeds the hall capacity per row, move to the next row
+        if (seat > hallCapacity!) {
+          row++;
+          seat = 1;
+        }
+      }
+    }
+
+    return allocatedSeats;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "SEAT ALLOCATION",
-          style: TextStyle(color: Colors.white), // Set text color to white
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Color.fromARGB(255, 19, 57, 85),
       ),
@@ -233,50 +261,10 @@ class _SeatAllocationState extends State<SeatAllocation> {
               Text('Selected Department 2: $selectedDepartment2'),
             TextButton(
               onPressed: () {
-                // Initialize variables for row and seat indices
-                int row = 1;
-                int seat = 1;
+                // Allocate seats and retrieve the allocated seat data
+                List<String> allocatedSeats = allocateSeats();
 
-                List<String> tableData = [];
-
-                // Add table header
-                tableData.add('Row | Seat | Student Name | Department');
-
-                // Loop through all students from department 1
-                for (Map<String, dynamic> student in students1) {
-                  // Assign seat to student
-                  String allocatedSeat =
-                      'Row $row | Seat $seat | ${student['name']} | ${student['department']}';
-                  tableData.add(allocatedSeat);
-
-                  // Increment seat index
-                  seat++;
-
-                  // If seat exceeds capacity per row, move to next row
-                  if (seat > 10) {
-                    row++;
-                    seat = 1;
-                  }
-                }
-
-                // Loop through all students from department 2
-                for (Map<String, dynamic> student in students2) {
-                  // Assign seat to student
-                  String allocatedSeat =
-                      'Row $row | Seat $seat | ${student['name']} | ${student['department']}';
-                  tableData.add(allocatedSeat);
-
-                  // Increment seat index
-                  seat++;
-
-                  // If seat exceeds capacity per row, move to next row
-                  if (seat > 10) {
-                    row++;
-                    seat = 1;
-                  }
-                }
-
-                // Print table footer
+                // Show the allocated seats in a dialog
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -286,10 +274,10 @@ class _SeatAllocationState extends State<SeatAllocation> {
                         width: double.maxFinite,
                         child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: tableData.length,
+                          itemCount: allocatedSeats.length,
                           itemBuilder: (BuildContext context, int index) {
                             return ListTile(
-                              title: Text(tableData[index]),
+                              title: Text(allocatedSeats[index]),
                             );
                           },
                         ),
