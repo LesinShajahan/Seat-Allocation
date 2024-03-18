@@ -51,72 +51,83 @@ class _ViewStudentsState extends State<ViewStudentsTeacher> {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
-              backgroundImage:
-                  NetworkImage('https://example.com/user_profile_image.jpg'),
+              backgroundImage: NetworkImage(
+                  'https://i.ibb.co/P9X3m82/Whats-App-Image-2024-03-12-at-10-14-01-AM.jpg'),
             ),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          SizedBox(height: 50),
-          Container(
-            width: 380,
-            height: 36,
-            decoration: BoxDecoration(
-              color: Color.fromARGB(255, 19, 57, 85),
-            ),
-            child: Center(
-              child: Text(
-                'Student List',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 30),
-          FutureBuilder<QuerySnapshot>(
-            future: studentsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                final List<DocumentSnapshot> documents = snapshot.data!.docs;
-                return Expanded(
-                    child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columns: [
-                        DataColumn(label: Text('Student Name')),
-                        DataColumn(label: Text('Reg No')),
-                        DataColumn(label: Text('Year')),
-                        DataColumn(label: Text('Dept')),
-                        // Add more columns if needed
-                      ],
-                      rows: documents.map((document) {
-                        final data = document.data() as Map<String, dynamic>;
-                        return DataRow(cells: [
-                          DataCell(Text(data['student name'])),
-                          DataCell(Text(data['registration number'])),
-                          DataCell(Text(data['year'].toString())),
-                          DataCell(Text(data['department'])),
-                          // Add more cells if needed
-                        ]);
-                      }).toList(),
-                    ),
-                  ),
-                ));
+      body: FutureBuilder<QuerySnapshot>(
+        future: studentsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            final List<DocumentSnapshot> documents = snapshot.data!.docs;
+            // Grouping students by department
+            Map<String, List<DocumentSnapshot>> studentsByDept = {};
+            for (var document in documents) {
+              final data = document.data() as Map<String, dynamic>;
+              final dept = data['department'] as String;
+              if (!studentsByDept.containsKey(dept)) {
+                studentsByDept[dept] = [];
               }
-            },
-          ),
-        ],
+              studentsByDept[dept]!.add(document);
+            }
+            return ListView.builder(
+              itemCount: studentsByDept.length,
+              itemBuilder: (context, index) {
+                final dept = studentsByDept.keys.elementAt(index);
+                final studentsInDept = studentsByDept[dept]!;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        '$dept Department',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columns: [
+                          DataColumn(label: Text('S.No')),
+                          DataColumn(label: Text('Student Name')),
+                          DataColumn(label: Text('Reg No')),
+                          DataColumn(label: Text('Year')),
+                          DataColumn(label: Text('Dept')),
+                          // Add more columns if needed
+                        ],
+                        rows: studentsInDept.asMap().entries.map((entry) {
+                          final index = entry.key + 1;
+                          final document = entry.value;
+                          final data = document.data() as Map<String, dynamic>;
+                          return DataRow(cells: [
+                            DataCell(Text(index.toString())),
+                            DataCell(Text(data['student name'])),
+                            DataCell(Text(data['registration number'])),
+                            DataCell(Text(data['year'].toString())),
+                            DataCell(Text(data['department'])),
+                            // Add more cells if needed
+                          ]);
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        },
       ),
     );
   }
