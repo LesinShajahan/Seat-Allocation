@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
 class SeatAllocation extends StatefulWidget {
   SeatAllocation({Key? key}) : super(key: key);
@@ -9,9 +8,19 @@ class SeatAllocation extends StatefulWidget {
 }
 
 class _SeatAllocationState extends State<SeatAllocation> {
+  Future<List<String>> fetchDepartments() async {
+    QuerySnapshot departmentSnapshot =
+        await FirebaseFirestore.instance.collection('departmentdetails').get();
+    List<String> departments =
+        departmentSnapshot.docs.map((doc) => doc.id).toList();
+    return departments;
+  }
+
   TextEditingController hallIdController = TextEditingController();
   String? hallName;
   int? hallcapacity;
+  String? selectedDepartment1;
+  String? selectedDepartment2;
 
   Future<void> fetchHallDetails(String hallId) async {
     try {
@@ -52,6 +61,112 @@ class _SeatAllocationState extends State<SeatAllocation> {
     }
   }
 
+  List<Map<String, dynamic>> students1 = [];
+  List<Map<String, dynamic>> students2 = [];
+
+  Future<void> fetchStudentsFromDepartment() async {
+    students1.clear();
+    students2.clear();
+
+    if (selectedDepartment1 != null) {
+      QuerySnapshot studentsSnapshot = await FirebaseFirestore.instance
+          .collection('studentsdetails')
+          .where('department', isEqualTo: selectedDepartment1)
+          .get();
+
+      students1.addAll(studentsSnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>));
+
+      // Shuffle the list of students1
+      students1.shuffle();
+
+      for (Map<String, dynamic> student in students1) {
+        print('Student Details (Department 1): $student');
+      }
+    }
+
+    if (selectedDepartment2 != null) {
+      QuerySnapshot studentsSnapshot = await FirebaseFirestore.instance
+          .collection('studentsdetails')
+          .where('department', isEqualTo: selectedDepartment2)
+          .get();
+
+      students2.addAll(studentsSnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>));
+
+      // Shuffle the list of students2
+      students2.shuffle();
+
+      for (Map<String, dynamic> student in students2) {
+        print('Student Details (Department 2): $student');
+      }
+    }
+  }
+
+  Future<void> showDepartmentDialog(Function(List<String?>) callback) async {
+    List<String> departments = await fetchDepartments();
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Departments'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: departments
+                  .map(
+                    (department) => CheckboxListTile(
+                      title: Text(department),
+                      value: selectedDepartment1 == department ||
+                          selectedDepartment2 == department,
+                      onChanged: (bool? value) {
+                        if (value == true) {
+                          if (selectedDepartment1 == null) {
+                            selectedDepartment1 = department;
+                          } else if (selectedDepartment2 == null) {
+                            selectedDepartment2 = department;
+                          }
+                        } else {
+                          if (selectedDepartment1 == department) {
+                            selectedDepartment1 = null;
+                          } else if (selectedDepartment2 == department) {
+                            selectedDepartment2 = null;
+                          }
+                        }
+                      },
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                List<String?> selectedDepartments = [
+                  selectedDepartment1,
+                  selectedDepartment2
+                ];
+                callback(selectedDepartments);
+
+                await fetchStudentsFromDepartment();
+
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void clearSelectedDepartments() {
+    setState(() {
+      selectedDepartment1 = null;
+      selectedDepartment2 = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,10 +192,23 @@ class _SeatAllocationState extends State<SeatAllocation> {
               onPressed: () {
                 String hallId = hallIdController.text.trim();
                 if (hallId.isNotEmpty) {
-                  // Fetch hall details from Firestore
-                  fetchHallDetails(hallId);
+                  fetchHallDetails(hallId).then((_) {
+                    showDepartmentDialog((selectedDepartments) {
+                      setState(() {
+                        if (selectedDepartments.length == 2) {
+                          selectedDepartment1 = selectedDepartments[0];
+                          selectedDepartment2 = selectedDepartments[1];
+                        } else if (selectedDepartments.length == 1) {
+                          selectedDepartment1 = selectedDepartments[0];
+                          selectedDepartment2 = null;
+                        } else {
+                          selectedDepartment1 = null;
+                          selectedDepartment2 = null;
+                        }
+                      });
+                    });
+                  });
                 } else {
-                  // Show an error message if hall ID is empty
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Please enter a Hall ID!'),
@@ -90,10 +218,87 @@ class _SeatAllocationState extends State<SeatAllocation> {
               },
               child: Text("Fetch Details"),
             ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: clearSelectedDepartments,
+              child: Text("Clear Selected Departments"),
+            ),
             SizedBox(height: 20),
-            // Display hall details
             if (hallName != null) Text('Hall Name: $hallName'),
-            // Add more UI elements to display other hall details as needed
+            SizedBox(height: 20),
+            if (selectedDepartment1 != null)
+              Text('Selected Department 1: $selectedDepartment1'),
+            if (selectedDepartment2 != null)
+              Text('Selected Department 2: $selectedDepartment2'),
+            TextButton(
+              onPressed: () {
+                // Initialize variables for row and seat indices
+                int row = 1;
+                int seat = 1;
+
+                List<String> tableData = [];
+
+                // Add table header
+                tableData.add('Row | Seat | Student Name | Department');
+
+                // Loop through all students from department 1
+                for (Map<String, dynamic> student in students1) {
+                  // Assign seat to student
+                  String allocatedSeat =
+                      'Row $row | Seat $seat | ${student['name']} | ${student['department']}';
+                  tableData.add(allocatedSeat);
+
+                  // Increment seat index
+                  seat++;
+
+                  // If seat exceeds capacity per row, move to next row
+                  if (seat > 10) {
+                    row++;
+                    seat = 1;
+                  }
+                }
+
+                // Loop through all students from department 2
+                for (Map<String, dynamic> student in students2) {
+                  // Assign seat to student
+                  String allocatedSeat =
+                      'Row $row | Seat $seat | ${student['name']} | ${student['department']}';
+                  tableData.add(allocatedSeat);
+
+                  // Increment seat index
+                  seat++;
+
+                  // If seat exceeds capacity per row, move to next row
+                  if (seat > 10) {
+                    row++;
+                    seat = 1;
+                  }
+                }
+
+                // Print table footer
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Allocated Seats"),
+                      content: Container(
+                        width: double.maxFinite,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: tableData.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                              title: Text(tableData[index]),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              child: Text("Allocate seats for students"),
+            )
           ],
         ),
       ),

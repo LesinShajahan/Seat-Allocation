@@ -84,7 +84,7 @@ class TeacherHome extends StatelessWidget {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color.fromARGB(255, 19, 57, 85),
+                  backgroundColor: Color.fromARGB(255, 19, 57, 85),
                   fixedSize: Size(300, 0),
                 ),
                 child: Text(
@@ -104,7 +104,7 @@ class TeacherHome extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 19, 57, 85),
+                backgroundColor: Color.fromARGB(255, 19, 57, 85),
                 fixedSize: Size(300, 0),
               ),
               child: Text(

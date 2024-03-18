@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:seat_allocation/view/studenthome.dart';
 import 'package:seat_allocation/view/teacherhome.dart';
 
 class LoginPageTeacher extends StatefulWidget {
